@@ -12,6 +12,10 @@ module OmniAuth
         token_url: '/kraken/oauth2/token'
       }
 
+      def request_phase
+        super
+      end
+
       uid{ raw_info['_id'] }
 
       info do
@@ -23,6 +27,14 @@ module OmniAuth
           logo: raw_info['logo'],
           type: raw_info['type']
         }
+      end
+
+      extra do
+        { 'raw_info' => raw_info }
+      end
+
+      def raw_info
+        @raw_info ||= JSON.parse(access_token.get('').body)
       end
     end
   end
